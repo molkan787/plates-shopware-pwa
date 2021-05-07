@@ -6,7 +6,7 @@
     <SwPluginSlot name="product-page-description" :slot-context="product">
       <p class="product-details__description" v-html="description" />
     </SwPluginSlot>
-    <RegNoFormOption v-model="regNo" />
+    <RegNoFormOption :state="optionsState" />
     <div
       v-if="product.optionIds && product.optionIds.length"
       class="product-details__section"
@@ -88,6 +88,7 @@ import { getProductUrl } from "@shopware-pwa/helpers"
 import { computed, onMounted, watch, ref } from "@vue/composition-api"
 import SwButton from "@/components/atoms/SwButton.vue"
 import { useAddToCart } from '../composables/useMyAddToCart';
+import { useProductOptions } from '../states/productOptions';
 import RegNoFormOption from './RegNoFormOption';
 
 export default {
@@ -122,8 +123,7 @@ export default {
       getSelectedOptions,
       findVariantForSelectedOptions,
     } = useProductConfigurator(root, product)
-
-    const regNo = ref('');
+    const { regNo, flag } = useProductOptions();
 
     const description = computed(
       () =>
@@ -164,7 +164,8 @@ export default {
 
     const addToCartWrapper = () => {
         addToCart({
-            registration_no: regNo.value
+            registration_no: regNo.value,
+            flag: flag.value
         });
     }
 
@@ -183,7 +184,9 @@ export default {
       isLoadingOptions,
       getProductOptions,
       onOptionChanged,
-      regNo
+      optionsState: {
+        regNo, flag
+      }
     }
   },
 }

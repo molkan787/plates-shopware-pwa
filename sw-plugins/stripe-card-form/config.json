@@ -1,0 +1,9 @@
+{
+    "slots": [
+        {
+            "name": "checkout-payment-method-Credit-Card-via-Stripe-",
+            "file": "StripeCardForm.vue"
+        }
+    ],
+    "settings": {}
+}

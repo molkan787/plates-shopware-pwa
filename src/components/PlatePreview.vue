@@ -1,17 +1,31 @@
 <template>
     <div class="plate-preview">
         <div class="canvas">
-            <span class="reg-no">{{ regNo }}</span>
+            <span class="reg-no">
+                <div class="flag-display-wrapper">
+                    <FlagDisplay :value="flag" :height="37" />
+                </div>
+                {{ regNo }}
+            </span>
         </div>
     </div>
 </template>
 
 <script>
+import FlagDisplay from './views/FlagDisplay';
+
 export default {
+    components: {
+        FlagDisplay
+    },
     props: {
         regNo: {
             type: String,
             default: ''
+        },
+        flag: {
+            type: Number,
+            default: 1
         }
     }
 }
@@ -37,7 +51,15 @@ export default {
         font-weight: bold;
         pointer-events: none;
         user-select: none;
+        font-family: 'Charles Wright';
         // background-color: rgba(#ff0000, 0.3);
+    }
+    .flag-display-wrapper{
+        float: left;
+        border-radius: 4px 0 0 4px;
+        overflow: hidden;
+        margin-top: -1px;
+        margin-left: -1px;
     }
 }
 </style>
