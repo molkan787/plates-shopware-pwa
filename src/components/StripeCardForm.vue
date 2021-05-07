@@ -3,12 +3,13 @@
         <h5>Fill in your card details</h5>
         <br>
         <div ref="wrapper" class="stripe-element-wrapper"></div>
+        <h5 class="error" v-if="error">{{ error.message }}</h5>
     </div>
 </template>
 
 <script>
-import { getStripe } from './stripeService'
-import { useSwStripeService } from './swStripeService'
+import { getStripe } from '../services/stripeService'
+import { useSwStripeService } from '../services/swStripeService'
 
 export default {
     setup(_, { root }) {
@@ -19,7 +20,8 @@ export default {
     },
     data: () => ({
         stripe: null,
-        cardEl: null
+        cardEl: null,
+        error: null
     }),
     methods: {
         async setupForm(){
@@ -50,11 +52,14 @@ export default {
             try {
                 const cardData = await this.getCardData()
                 await this.sendCard(cardData)
+                this.$emit('change', { ready: true })
             } catch (error) {
                 console.error(error)    
             }
         },
         onCardChange(event){
+            this.error = event.error
+            this.$emit('change', { ready: false, error: event.error })
             if(event.complete){
                 this.sendCardToServer()
             }
@@ -65,3 +70,9 @@ export default {
     }
 }
 </script>
+
+<style lang="scss" scoped>
+.error{
+    color: #eb1c26;
+}
+</style>

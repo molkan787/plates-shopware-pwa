@@ -23,6 +23,10 @@
                 <input type="file" @change="fileOwnershipChanged" />
             </div>
         </div>
+        <div v-if="isStripeCard" class="payment-details">
+            <h4>Payment details</h4>
+            <StripeCardForm @change="onStripeCardFormChange" />
+        </div>
         <div class="summary__action">
             <SwButton
                 class="sf-button--full-width summary__action-button summary__action-button--secondary color-secondary sw-form__button"
@@ -32,7 +36,7 @@
                 {{ $t('Go back to Payment') }}
             </SwButton>
             <SwButton
-                :disabled="!cartItems.length"
+                :disabled="!cartItems.length || !canPlaceOrder"
                 class="sf-button--full-width summary__action-button sw-form__button"
                 data-cy="place-my-order"
                 @click="$emit('proceed')"
@@ -43,14 +47,16 @@
     </div>
 </template>
 <script>
-import { useCart } from '@shopware-pwa/composables'
+import { computed, ref } from '@vue/composition-api'
+import { useCart, useSessionContext } from '@shopware-pwa/composables'
 import SwTotals from '@/components/SwTotals.vue'
+import StripeCardForm from '../../StripeCardForm'
 
 import {
     SfProperty,
     SfCheckbox,
     SfHeading,
-    SfNotification,
+    SfNotification
 } from '@storefront-ui/vue'
 import SwButton from '@/components/atoms/SwButton.vue'
 import { useCheckoutAttachments } from '../../../states/checkoutAttachments';
@@ -64,6 +70,7 @@ export default {
         SwButton,
         SfNotification,
         SwTotals,
+        StripeCardForm
     },
     data() {
         return {
@@ -79,6 +86,7 @@ export default {
             shippingTotal,
             refreshCart,
         } = useCart(root)
+        const { paymentMethod } = useSessionContext(root)
 
         const { proof_of_identity, proof_of_registration_ownership } = useCheckoutAttachments()
         proof_of_identity.value = null;
@@ -94,6 +102,20 @@ export default {
             proof_of_registration_ownership.value = file;
         }
 
+        const isStripeCard = computed(
+            () => paymentMethod.value && paymentMethod.value.shortName === 'stripe.shopware_payment.payment_handler.card'
+        )
+
+        const isStripeCardFormReady = ref(false)
+
+        const canPlaceOrder = computed(
+            () => isStripeCard.value ? isStripeCardFormReady.value : true
+        )
+
+        const onStripeCardFormChange = (event) => {
+            isStripeCardFormReady.value = event.ready && !event.error
+        }
+
         return {
             fileIdentityChanged,
             fileOwnershipChanged,
@@ -103,6 +125,10 @@ export default {
             total: totalPrice,
             shippingTotal,
             removeProduct,
+            isStripeCard,
+            isStripeCardFormReady,
+            canPlaceOrder,
+            onStripeCardFormChange
         }
     },
 }
@@ -117,6 +143,16 @@ export default {
         & > div:first-child{
             margin-right: 2rem;
         }
+        @media (max-width: 786px) {
+            flex-direction: column;
+            & > div:first-child{
+                margin-right: 0;
+                margin-bottom: 2rem;
+            }
+        }
+    }
+    .payment-details{
+        padding: var(--spacer-base) var(--spacer-xl);
     }
     margin: 0 calc(var(--spacer-base) * -1);
     &__group {
