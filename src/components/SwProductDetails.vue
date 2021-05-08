@@ -6,7 +6,7 @@
     <SwPluginSlot name="product-page-description" :slot-context="product">
       <p class="product-details__description" v-html="description" />
     </SwPluginSlot>
-    <RegNoFormOption :state="optionsState" />
+    <RegNoFormOption v-if="requireRegNo" :state="optionsState" />
     <div
       v-if="product.optionIds && product.optionIds.length"
       class="product-details__section"
@@ -33,6 +33,9 @@
         type="warning"
         class="product-details__alert mobile-only"
       />
+      <div class="error-message" v-if="regNoInputMissing">
+        Please enter your Registration NO
+      </div>
       <SfAddToCart
         v-model="quantity"
         :stock="stock"
@@ -44,6 +47,7 @@
             class="sf-button--full-width"
             @click="addToCart"
             data-cy="button-addToCart"
+            :disabled="!canAddToCart"
           >
             {{ $t("Add To Cart") }}
           </SwButton>
@@ -123,7 +127,7 @@ export default {
       getSelectedOptions,
       findVariantForSelectedOptions,
     } = useProductConfigurator(root, product)
-    const { regNo, flag } = useProductOptions();
+    const { regNo } = useProductOptions();
 
     const description = computed(
       () =>
@@ -169,6 +173,25 @@ export default {
         });
     }
 
+    const requireRegNo = computed(
+      () => product && product.translated && product.translated.customFields && product.translated.customFields.custom_plate_reg_no
+    )
+
+    const regNoInputMissing = computed(
+      () => requireRegNo.value && regNo.value.replace(/\s/g, '').length < 4
+    )
+
+    const canAddToCart = computed(
+      () => !regNoInputMissing.value
+    )
+
+    const flagOptionGroup = getOptionGroups.value.find(og => og.translated.name == 'Flag')
+    const flagOptionsPositions = flagOptionGroup && flagOptionGroup.options.reduce((m, o) => (m[o.id] = o.translated.position) && m, {})
+
+    const flag = computed(
+      () => ( flagOptionsPositions  && flagOptionsPositions[getSelectedOptions.value['Flag']] ) || 24
+    )
+
     return {
       stock,
       reviews,
@@ -186,7 +209,10 @@ export default {
       onOptionChanged,
       optionsState: {
         regNo, flag
-      }
+      },
+      requireRegNo,
+      canAddToCart,
+      regNoInputMissing
     }
   },
 }
@@ -194,6 +220,17 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/variables";
+
+.error-message{
+  margin-top: -1.15rem;
+  font-size: 0.8rem;
+  color: red;
+  margin-left: var(--quantity-selector-width, 6.75rem);
+  padding-left: 1rem;
+  @include for-desktop {
+    margin-bottom: -1.5rem;
+  }
+}
 
 @mixin for-iOS {
   @supports (-webkit-overflow-scrolling: touch) {

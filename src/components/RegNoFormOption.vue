@@ -1,7 +1,7 @@
 <template>
     <div class="reg_no_form_option">
-        <div class="col">
-            <FlagSelect :height="46" :value="state.flag.value" @input="state.flag.value = $event" />
+        <div class="col" v-if="state.flag.value > 0 && state.flag.value < 24">
+            <FlagDisplay :height="46" :value="state.flag.value" @input="state.flag.value = $event" />
         </div>
         <div class="spacer col"></div>
         <div class="col middle">
@@ -21,7 +21,7 @@
 <script>
 import { SfModal, SfInput } from "@storefront-ui/vue"
 import PlatePreview from './PlatePreview';
-import FlagSelect from './views/FlagSelect';
+import FlagDisplay from './views/FlagDisplay';
 
 export default {
     components: {
@@ -29,7 +29,7 @@ export default {
         SfModal,
         SwButton: () => import("@/components/atoms/SwButton.vue"),
         PlatePreview,
-        FlagSelect
+        FlagDisplay
     },
     props: {
         state: {
@@ -91,9 +91,13 @@ $plateColor: #F7D041;
 </style>
 
 <style lang="scss">
+@import "@/assets/scss/variables";
 .reg_no_form_option{
     .sf-modal__container{
-        width: fit-content !important;
+        width: 100% !important;
+        @include for-desktop {
+            width: fit-content !important;
+        }
     }
     .regno-input input{
         background-color: #F7D041;

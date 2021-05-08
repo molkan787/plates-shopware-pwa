@@ -12,12 +12,22 @@
   >
     <template #actions>
       <div class="collected-product__configuration" v-if="options">
-        <SfProperty
+        <!-- <SfProperty
           v-for="option in options"
           :key="`${option.group}-${option.option}`"
           :name="option.group"
           :value="option.option"
-        />
+        /> -->
+        <!-- <div v-for="option in options" :key="`${option.group}-${option.option}`" class="sf-property">
+          <span class="sf-property__name">{{ option.group }}</span>
+          <span class="sf-property__value">{{ option.option }}</span>
+        </div> -->
+        <table>
+          <tr v-for="option in options" :key="`${option.group}-${option.option}`" class="sf-property">
+            <td class="sf-property__name">{{ option.group }}</td>
+            <td class="sf-property__value">{{ option.option }}</td>
+          </tr>
+        </table>
       </div>
     </template>
   </SfCollectedProduct>
@@ -98,7 +108,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "@/assets/scss/variables";
-
+.sf-property{
+  display: table-row;
+  .sf-property__name, .sf-property__value{
+    font-size: 0.8rem;
+    display: table-cell;
+  }
+}
 .collected-product {
   --collected-product-actions-align-items: flex-end;
   --collected-product-title-font-size: var(--font-base);

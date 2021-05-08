@@ -19,3 +19,14 @@
     font-family: 'Charles Wright';
     src: url('@/assets/fonts/CharlesWright-Bold.ttf') format('truetype');
 }
+
+html, body{
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden !important;
+}
+
+.sw-product-gallery ul.glide__slides{
+    min-height: 84vw;
+    height: 0;
+}
