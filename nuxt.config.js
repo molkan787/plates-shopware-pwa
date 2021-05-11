@@ -11,7 +11,7 @@ export default {
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'shopware-pwa-project',
+    title: 'REG 4 PLATES',
     meta: [
       { hid: 'project-type', name: 'project-type', content: 'shopware-pwa' },
       { hid: 'project-type', name: 'project-type', content: 'shopware-pwa' },
@@ -20,13 +20,6 @@ export default {
       { hid: 'description', name: 'description', content: '' },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
-    script: [
-      {
-        hid: "tawk.to",
-        src: "https://embed.tawk.to/608da0fd62662a09efc3fc08/1f4kjpoak",
-        defer: true
-      }
-    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -34,6 +27,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    '~/plugins/vue-fb-customer-chat.client.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

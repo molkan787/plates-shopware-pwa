@@ -1,6 +1,6 @@
 <template>
   <SfFooter :column="4" multiple class="footer">
-    <SfFooterColumn :title="$t('About us')">
+    <!-- <SfFooterColumn :title="$t('About us')">
       <SfList>
         <SfListItem
           v-for="item in aboutUs"
@@ -35,22 +35,25 @@
           />
         </SfListItem>
       </SfList>
-    </SfFooterColumn>
-    <SfFooterColumn :title="$t('Payment & Delivery')">
+    </SfFooterColumn> -->
+    <SfFooterColumn title="Reg4Plate">
       <SfList>
         <SfListItem
-          v-for="item in paymentsDelivery"
-          :key="item"
+          v-for="item in main"
+          :key="item.name"
         >
           <SfMenuItem
-            :label="$t(item)"
+            :label="item.name"
+            :link="item.link"
           />
         </SfListItem>
       </SfList>
     </SfFooterColumn>
     <SfFooterColumn title="Social">
       <div class="footer__socials">
-        <SfImage class="footer__social-image" v-for="item in social" :key="item" :src="'/icons/'+item+'.svg'" :alt="item" width="32" height="32" />
+        <SfImage v-for="item in social" :key="item.name" class="footer__social-image"
+          :src="`/icons/${item.icon}`" :alt="item.name.toUpperCase()" :width="item.size || 32" :height="item.size || 32"
+          @click="openUrl(item.link)" />
       </div>
     </SfFooterColumn>
   </SfFooter>
@@ -67,14 +70,27 @@ export default {
   },
   data() {
     return {
-      aboutUs: ['Who we are', 'Quality in the details', 'Customer Reviews'],
-      departments: ['Women fashion', 'Men fashion', 'Kidswear', 'Home'],
-      help: ['Customer service', 'Size guide', 'Contact us'],
-      paymentsDelivery: ['Purchase terms', 'Guarantee'],
-      social: ['facebook', 'pinterest', 'google', 'twitter', 'youtube'],
+      // aboutUs: ['Who we are', 'Quality in the details', 'Customer Reviews'],
+      // departments: ['Women fashion', 'Men fashion', 'Kidswear', 'Home'],
+      // help: ['Customer service', 'Size guide', 'Contact us'],
+      // paymentsDelivery: ['Purchase terms', 'Guarantee'],
+      main: [
+        { name: 'Home', link: '/'  },
+        { name: 'Track order', link: '/track-order'  },
+        { name: 'Gallery', link: '/Gallery'}
+      ],
+      social: [
+        { name: 'facebook', icon: 'facebook.png', link: 'http://fb.me/reg4plates', size: 31  },
+        { name: 'instagram', icon: 'instagram.ico', link: 'https://www.instagram.com/justplatesuk'}
+      ],
       isMobile: false,
       desktopMin: 1024
     };
+  },
+  methods: {
+    openUrl(url){
+      window.open(url, '_blank')
+    }
   }
 };
 </script>
@@ -99,6 +115,7 @@ export default {
   }
   &__social-image {
     margin: 0 var(--spacer-2xs) 0 0;
+    cursor: pointer;
   }
 }
 .sf-footer {

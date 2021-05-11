@@ -6,6 +6,10 @@
 // Please remember to ONLY override variables here, as it will be used in components.
 // If you'd add some styles here as well it would be included in almost every component. You don't want it ;) You can add global styles in main.scss file.
 
-// #__nuxt {
-//   --c-primary: #5ece7b;
-// }
+#__nuxt {
+    --c-primary: #efd301;
+    --c-primary-base: #efd301;
+    --c-primary-lighten: #f1dc39;
+    --c-primary-darken: #dbc205;
+    --c-primary-variant: #f8e65a;
+}
