@@ -1,20 +1,23 @@
 <template>
-    <div class="reg_no_form_option">
-        <div class="col" v-if="state.flag.value > 0 && state.flag.value < 24">
-            <FlagDisplay :height="46" :value="state.flag.value" @input="state.flag.value = $event" />
+    <div class="reg_no_form_wrapper">
+        <div class="reg_no_form_option">
+            <div class="col" v-if="state.flag.value > 0 && state.flag.value < 24">
+                <FlagDisplay :height="46" :value="state.flag.value" @input="state.flag.value = $event" />
+            </div>
+            <div class="spacer col"></div>
+            <div class="col middle">
+                <input class="regno-input" v-model="state.regNo.value" maxlength="10"  placeholder="Your Registration" />
+            </div>
+            <div class="col">
+                <SwButton class="sf-button--full-width sf-button--outline" @click="previewClick">
+                    Preview
+                </SwButton>
+            </div>
+            <SfModal :visible="previewOpen" @close="previewOpen = false" >
+                <PlatePreview :regNo="state.regNo.value" :flag="state.flag.value" />
+            </SfModal>
         </div>
-        <div class="spacer col"></div>
-        <div class="col middle">
-            <SfInput class="regno-input" :value="state.regNo.value" @input="state.regNo.value = $event" :errorMessage="regNoError" :valid="!regNoError" label="Your Registration" />
-        </div>
-        <div class="col">
-            <SwButton class="sf-button--full-width" @click="previewClick">
-                Preview
-            </SwButton>
-        </div>
-        <SfModal :visible="previewOpen" @close="previewOpen = false" >
-            <PlatePreview :regNo="state.regNo.value" :flag="state.flag.value" />
-        </SfModal>
+        <div class="error-message" v-if="regNoError">{{ regNoError }}</div>
     </div>
 </template>
 
@@ -70,11 +73,11 @@ $plateColor: #F7D041;
 .reg_no_form_option{
     display: flex;
     flex-direction: row;
+    background-color: #F7D041;
     & > div.col{
         &.spacer{
             height: 45px;
             width: 0.6rem;
-            background-color: #F7D041;
         }
         &.middle{
             flex: 1;
@@ -87,6 +90,18 @@ $plateColor: #F7D041;
             }
         }
     }
+    .regno-input{
+        border: none;
+        background: transparent;
+        width: 100%;
+        height: 97%;
+        font-size: 1.5rem;
+        font-family: 'Charles Wright';
+        outline: none
+    }
+}
+.error-message{
+    color: var(--c-danger);
 }
 </style>
 
@@ -99,8 +114,8 @@ $plateColor: #F7D041;
             width: fit-content !important;
         }
     }
-    .regno-input input{
-        background-color: #F7D041;
+    & > .col .sf-button{
+        background-color: white;
     }
 }
 </style>

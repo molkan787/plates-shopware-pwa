@@ -34,7 +34,10 @@ export default {
   components: false,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: ['@shopware-pwa/nuxt-module'],
+  buildModules: [
+    '@shopware-pwa/nuxt-module',
+    '@nuxtjs/device'
+  ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [

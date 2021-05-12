@@ -4,9 +4,7 @@
     class="sf-header__logo"
     data-cy="header-logo"
   >
-    <div class="logo">
-        <img src="@/assets/images/reg4plate_logo.png" alt="Logo">
-    </div>
+  <img class="logo" src="@/assets/images/reg4plate_logo.png" alt="Logo">
   </nuxt-link>
 </template>
 
@@ -19,17 +17,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/scss/variables";
 .logo{
-    display: inline-block;
-    width: 42px;
-    height: 32px;
-    overflow: hidden;
-    img{
-        width: 42px;
-        height: auto;
-        aspect-ratio: 1.054;
-    }
-}
-.sf-header__logo {
-  height: 2rem;
+  height: 54px;
+  transform: translateY(4px);
 }
 </style>

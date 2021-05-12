@@ -17,6 +17,6 @@ loadNuxt(isDev ? 'dev' : 'start').then(nuxt => {
     
     http.createServer(function (req, res) {
         nuxt.render(req, res)
-    }).listen(80);
+    }).listen(process.env.PORT || 80);
 
 })

@@ -104,7 +104,7 @@ export default {
   }
   &__socials {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     margin: 0 auto var(--spacer-lg);
     padding: var(--spacer-base) var(--spacer-xl);
     @media (min-width:1025px) {

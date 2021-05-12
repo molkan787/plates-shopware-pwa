@@ -1,7 +1,7 @@
 <template>
   <div v-if="product" id="product">
     <SwPluginSlot name="product-page-details-before" :slot-context="product" />
-    <SwGoBackArrow class="product-page-back" />
+    <!-- <SwGoBackArrow class="product-page-back" /> -->
     <div class="product">
       <SwProductGallery :product="product" class="product__gallery" />
       <div class="product__description">
