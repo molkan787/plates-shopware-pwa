@@ -25,7 +25,7 @@ export default {
     }),
     methods: {
         async setupForm(){
-            const stripe = await getStripe()
+            const stripe = await getStripe(this.$root)
             const elements = stripe.elements()
             const cardEl = elements.getElement('card') || elements.create('card')
             cardEl.mount(this.$refs.wrapper)

@@ -48,6 +48,7 @@
             @click="addToCart"
             data-cy="button-addToCart"
             :disabled="!canAddToCart"
+            :loading="addToCartBtnLoading"
           >
             {{ $t("Add To Cart") }}
           </SwButton>
@@ -166,11 +167,15 @@ export default {
       })
     }
 
-    const addToCartWrapper = () => {
-        addToCart({
+    const addToCartBtnLoading = ref(false)
+
+    const addToCartWrapper = async () => {
+        addToCartBtnLoading.value = true
+        await addToCart({
             registration_no: regNo.value,
             flag: flag.value
         });
+        addToCartBtnLoading.value = false
     }
 
     const requireRegNo = computed(
@@ -212,7 +217,8 @@ export default {
       },
       requireRegNo,
       canAddToCart,
-      regNoInputMissing
+      regNoInputMissing,
+      addToCartBtnLoading
     }
   },
 }

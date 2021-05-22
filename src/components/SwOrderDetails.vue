@@ -108,22 +108,11 @@ import {
   SfCharacteristic,
   SfModal,
 } from "@storefront-ui/vue"
-import { useUser, getApplicationContext, useSharedState } from "@shopware-pwa/composables"
-import { getOrderPaymentUrlEndpoint } from '@shopware-pwa/shopware-6-client'
-import { ref, onMounted, computed, watch } from "@vue/composition-api"
+import { useUser, useSharedState } from "@shopware-pwa/composables"
+import { ref, onMounted, computed, watch, getCurrentInstance } from "@vue/composition-api"
 import SwPluginSlot from "sw-plugins/SwPluginSlot.vue"
-import {
-  getOrderPaymentMethodId,
-  getOrderShippingMethodId,
-} from "@shopware-pwa/helpers"
-import {
-  getShippingMethodDetails,
-  getPaymentMethodDetails,
-  getOrderPaymentUrl,
-} from "@shopware-pwa/shopware-6-client"
 import { usePaymentService } from '../services/paymentService'
 import SwButton from "@/components/atoms/SwButton.vue"
-import { PAGE_ORDER_SUCCESS } from "@/helpers/pages"
 import SwOrderDetailsItem from "@/components/SwOrderDetailsItem.vue"
 import SwPersonalDetails from "@/components/SwPersonalDetails.vue"
 import SwAddress from "@/components/SwAddress.vue"
@@ -170,8 +159,8 @@ export default {
   },
   // TODO: move this logic into separate service;
   // details: https://github.com/DivanteLtd/shopware-pwa/issues/781
-  setup({ orderId, preventRedirect }, { root }) {
-    const { apiInstance } = getApplicationContext(root, "SwOrderDetails")
+  setup({ orderId, preventRedirect }, { root, emit }) {
+    // const { apiInstance } = getApplicationContext(root, "SwOrderDetails")
     const { getOrderDetails, loading, error: userError } = useUser(root)
     const { sharedRef } = useSharedState(root)
     const { pay } = usePaymentService(root)
@@ -230,22 +219,7 @@ export default {
         if(isAfterPayment) return
         isPaymentButtonLoading.value = true
         order.value = await getOrderDetails(orderId)
-        // const resp = await getOrderPaymentUrl(
-        //   {
-        //     orderId,
-        //     finishUrl: `${window.location.origin}${PAGE_ORDER_SUCCESS}?orderId=${orderId}`,
-        //   },
-        //   apiInstance
-        // )
-        // const url = `${window.location.origin}/sales-channel-api/v3/checkout/order/${orderId}/pay`;
-        // // const url = `${window.location.origin}/store-api/v3/handle-payment`;
-        // const { data: resp } = await apiInstance.invoke.post(
-        //     url,
-        //     {
-        //         finishUrl: `${window.location.origin}${PAGE_ORDER_SUCCESS}?orderId=${orderId}`,
-        //         errorUrl: `${window.location.origin}${PAGE_ORDER_SUCCESS}_error?orderId=${orderId}`,
-        //     }
-        // );
+        emit('order-loaded')
         const resp = await pay(orderId)
         paymentUrl.value = resp.paymentUrl
       } catch (e) { console.error(e) }

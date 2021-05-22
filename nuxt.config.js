@@ -68,5 +68,9 @@ export default {
     `${shopwareEndpoint}/store-api/v3/shopware-pwa/payment-method-settings`,
     `${shopwareEndpoint}/sales-channel-api/v3/checkout/order/*/pay`,
     `${shopwareEndpoint}/store-api/v3/handle-payment`
-  ]
+  ],
+
+  router: {
+    middleware: 'order-page'
+  }
 }

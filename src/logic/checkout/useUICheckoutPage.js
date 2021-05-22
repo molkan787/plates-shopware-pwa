@@ -6,8 +6,11 @@ import { usePersonalDetailsStep } from "@/logic/checkout/usePersonalDetailsStep"
 import { useShippingStep } from "@/logic/checkout/useShippingStep"
 import { usePaymentStep } from "@/logic/checkout/usePaymentStep"
 import { PAGE_ORDER_SUCCESS } from "@/helpers/pages"
-import { useCheckout } from '@/composables/useCheckout';
-import { useCheckoutAttachments } from '../../states/checkoutAttachments';
+import { useCheckout } from '@/composables/useCheckout'
+import { useCheckoutAttachments } from '../../states/checkoutAttachments'
+import { useFileUploadService } from '../../services/fileUploadService'
+
+const placingOrder = ref(false)
 
 export const useUICheckoutPage = (rootContext) => {
   const { router, routing } = getApplicationContext(
@@ -15,6 +18,16 @@ export const useUICheckoutPage = (rootContext) => {
     "useUICheckoutPage"
   )
   const { isGuestOrder, createOrder } = useCheckout(rootContext)
+  const { upload } = useFileUploadService(rootContext)
+  const { proof_of_identity, proof_of_registration_ownership } = useCheckoutAttachments()
+
+  
+  const getCheckoutAttachments = async () => {
+    return {
+        proof_of_identity: proof_of_identity.value instanceof File ? (await upload([proof_of_identity.value]))[0] : undefined,
+        proof_of_registration_ownership: proof_of_registration_ownership.value instanceof File ? (await upload([proof_of_registration_ownership.value]))[0] : undefined
+    }
+  }
 
   const currentStep = ref(
     isGuestOrder.value ? CHECKOUT_STEPS.PERSONAL_DETAILS : CHECKOUT_STEPS.REVIEW
@@ -88,10 +101,17 @@ export const useUICheckoutPage = (rootContext) => {
       currentStep.value === CHECKOUT_STEPS.REVIEW &&
       nextStepNumber > CHECKOUT_STEPS.REVIEW
     ) {
-      const customFields = await getCheckoutAttachments()
-      const order = await createOrder(customFields)
-      console.log('order created!')
-      router.push(routing.getUrl(`${PAGE_ORDER_SUCCESS}?orderId=${order.id}`))
+      try {
+        placingOrder.value = true
+        const customFields = await getCheckoutAttachments()
+        const order = await createOrder(customFields)
+        placingOrder.value = false
+        console.log('order created!')
+        router.push(routing.getUrl(`${PAGE_ORDER_SUCCESS}?orderId=${order.id}`))
+      } catch (error) {
+        placingOrder.value = false
+        throw error
+      }
     } else {
       const nextStep = getStepByNumber(nextStepNumber)
       if (stepsStatus.value[nextStep].available) {
@@ -105,22 +125,7 @@ export const useUICheckoutPage = (rootContext) => {
 
   return {
     currentStep,
-    nextStep
+    nextStep,
+    placingOrder
   }
 }
-
-const getCheckoutAttachments = async () => {
-    const { proof_of_identity, proof_of_registration_ownership } = useCheckoutAttachments();
-    return {
-        proof_of_identity: proof_of_identity.value instanceof File ? (await toBase64(proof_of_identity.value)) : undefined,
-        proof_of_registration_ownership: proof_of_registration_ownership.value instanceof File ? (await toBase64(proof_of_registration_ownership.value)) : undefined
-    }
-}
-
-const toBase64 = (file) =>
-    new Promise((resolve, reject) => {
-        const reader = new FileReader()
-        reader.readAsDataURL(file)
-        reader.onload = () => resolve(reader.result)
-        reader.onerror = (error) => reject(error)
-    })

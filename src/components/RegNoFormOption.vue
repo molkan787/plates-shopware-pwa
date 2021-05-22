@@ -94,10 +94,10 @@ $plateColor: #F7D041;
         border: none;
         background: transparent;
         width: 100%;
-        height: 97%;
-        font-size: 1.5rem;
+        height: 93%;
+        font-size: 1.2rem;
         font-family: 'Charles Wright';
-        outline: none
+        outline: none;
     }
 }
 .error-message{

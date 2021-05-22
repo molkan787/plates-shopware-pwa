@@ -23,6 +23,9 @@
                 <input type="file" @change="fileOwnershipChanged" />
             </div>
         </div>
+        <div class="accepted-files">
+            Allowed file types are: 'gif', 'png', 'jpg', 'jpeg', 'pdf', 'xlsx', 'txt', 'docx'
+        </div>
         <div v-if="isStripeCard" class="payment-details">
             <h4>Payment details</h4>
             <StripeCardForm @change="onStripeCardFormChange" />
@@ -37,6 +40,7 @@
             </SwButton>
             <SwButton
                 :disabled="!cartItems.length || !canPlaceOrder"
+                :loading="placingOrder"
                 class="sf-button--full-width summary__action-button sw-form__button"
                 data-cy="place-my-order"
                 @click="$emit('proceed')"
@@ -60,6 +64,7 @@ import {
 } from '@storefront-ui/vue'
 import SwButton from '@/components/atoms/SwButton.vue'
 import { useCheckoutAttachments } from '../../../states/checkoutAttachments';
+import { useUICheckoutPage } from '../../../logic/checkout/useUICheckoutPage'
 
 export default {
     name: 'TotalsSummary',
@@ -87,6 +92,7 @@ export default {
             refreshCart,
         } = useCart(root)
         const { paymentMethod } = useSessionContext(root)
+        const { placingOrder } = useUICheckoutPage(root)
 
         const { proof_of_identity, proof_of_registration_ownership } = useCheckoutAttachments()
         proof_of_identity.value = null;
@@ -128,7 +134,8 @@ export default {
             isStripeCard,
             isStripeCardFormReady,
             canPlaceOrder,
-            onStripeCardFormChange
+            onStripeCardFormChange,
+            placingOrder
         }
     },
 }
@@ -150,6 +157,11 @@ export default {
                 margin-bottom: 2rem;
             }
         }
+    }
+    .accepted-files{
+        padding: 0 var(--spacer-xl);
+        color: #5d5d5d;
+        font-size: 13px;
     }
     .payment-details{
         padding: var(--spacer-base) var(--spacer-xl);

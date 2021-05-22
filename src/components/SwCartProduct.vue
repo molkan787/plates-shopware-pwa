@@ -12,16 +12,6 @@
   >
     <template #actions>
       <div class="collected-product__configuration" v-if="options">
-        <!-- <SfProperty
-          v-for="option in options"
-          :key="`${option.group}-${option.option}`"
-          :name="option.group"
-          :value="option.option"
-        /> -->
-        <!-- <div v-for="option in options" :key="`${option.group}-${option.option}`" class="sf-property">
-          <span class="sf-property__name">{{ option.group }}</span>
-          <span class="sf-property__value">{{ option.option }}</span>
-        </div> -->
         <table>
           <tr v-for="option in options" :key="`${option.group}-${option.option}`" class="sf-property">
             <td class="sf-property__name">{{ option.group }}</td>

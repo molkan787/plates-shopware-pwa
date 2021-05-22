@@ -3,6 +3,15 @@
     <SfTableData class="table__description">
       <div class="product-title">{{ label }}</div>
       <div class="product-sku">{{ product.productNumber }}</div>
+      <div class="collected-product__configuration" v-if="options">
+        <div style="width:100%;height: 5px"></div>
+        <table>
+          <tr v-for="option in options" :key="`${option.group}-${option.option}`" class="sf-property">
+            <td class="sf-property__name">{{ option.group }}</td>
+            <td class="sf-property__value">{{ option.option }}</td>
+          </tr>
+        </table>
+      </div>
     </SfTableData>
     <SfTableData class="table__data table__price">
       <SfPrice :regular="getUnitPrice | price" class="product-price" />
@@ -55,9 +64,13 @@ export default {
     getQuantity() {
       return this.product.quantity
     },
+    options(){
+      return this.product.payload && this.product.payload.options
+    }
   },
   setup({ product }){
       const { label } = useProductDetails(product)
+      console.log(product)
       return {
           label
       }
@@ -68,7 +81,13 @@ export default {
 .product-price {
   white-space: nowrap;
 }
-
+.sf-property{
+  display: table-row;
+  .sf-property__name, .sf-property__value{
+    font-size: 0.8rem;
+    display: table-cell;
+  }
+}
 .table {
   & > td {
     flex: 1;

@@ -1,41 +1,5 @@
 <template>
   <SfFooter :column="4" multiple class="footer">
-    <!-- <SfFooterColumn :title="$t('About us')">
-      <SfList>
-        <SfListItem
-          v-for="item in aboutUs"
-          :key="item"
-          >
-          <SfMenuItem
-            :label="$t(item)"
-          />
-        </SfListItem>
-      </SfList>
-    </SfFooterColumn>
-    <SfFooterColumn :title="$t('Departments')">
-      <SfList>
-        <SfListItem
-          v-for="item in departments"
-          :key="item"
-        >
-          <SfMenuItem
-            :label="$t(item)"
-          />
-        </SfListItem>
-      </SfList>
-    </SfFooterColumn>
-    <SfFooterColumn :title="$t('Help')">
-      <SfList>
-        <SfListItem
-          v-for="item in help"
-          :key="item"
-        >
-          <SfMenuItem
-            :label="$t(item)"
-          />
-        </SfListItem>
-      </SfList>
-    </SfFooterColumn> -->
     <SfFooterColumn title="Reg4Plate">
       <SfList>
         <SfListItem
@@ -56,6 +20,7 @@
           @click="openUrl(item.link)" />
       </div>
     </SfFooterColumn>
+    <SfFooterColumn class="footer__notice" title="Reg4Plates is DVLA Approved RNPS"></SfFooterColumn>
   </SfFooter>
 </template>
 
@@ -77,7 +42,8 @@ export default {
       main: [
         { name: 'Home', link: '/'  },
         { name: 'Track order', link: '/track-order'  },
-        { name: 'Gallery', link: '/Gallery'}
+        { name: 'Gallery', link: '/gallery'},
+        { name: 'Returns & Exchange', link: '/returns_and_exchange'}
       ],
       social: [
         { name: 'facebook', icon: 'facebook.png', link: 'http://fb.me/reg4plates', size: 31  },
@@ -104,7 +70,7 @@ export default {
   }
   &__socials {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     margin: 0 auto var(--spacer-lg);
     padding: var(--spacer-base) var(--spacer-xl);
     @media (min-width:1025px) {
@@ -116,6 +82,13 @@ export default {
   &__social-image {
     margin: 0 var(--spacer-2xs) 0 0;
     cursor: pointer;
+  }
+  &__notice {
+    text-align: left;
+    white-space: nowrap;
+    .sf-footer-column__chevron{
+      display: none;
+    }
   }
 }
 .sf-footer {

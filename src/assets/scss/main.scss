@@ -25,3 +25,13 @@ html, body{
     padding: 0;
     overflow-x: hidden !important;
 }
+
+.review.checkout__aside-order, .checkout__aside-order{
+    box-sizing: border-box !important;
+}
+
+@media (max-width: 768px){
+    .cms-element-product-listing.cms-block-default{
+        margin: 0 !important;
+    }
+}

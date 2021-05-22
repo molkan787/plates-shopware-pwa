@@ -8,7 +8,7 @@
                 {{ car.label }}
             </SfSelectOption>
         </SfSelect>
-        <div class="canvas" :style="`background-image: url('${selectedCarImageUrl}')`" @resize="onCanvasResized" ref="canvas">
+        <div class="canvas" :style="`background-image: url('${selectedCarImageUrl}');height: ${canvasHeight}px`" @resize="onCanvasResized" ref="canvas">
             <div class="reg-no-wrapper" :style="plateWrapperStyle">
                 <span class="reg-no">
                     <div v-if="flag > 0 && flag < 24" class="flag-display-wrapper">
@@ -44,7 +44,8 @@ export default {
     data: () => ({
         cars: cars,
         selectedCar: cars[0].value,
-        plateZoomLevel: 1
+        plateZoomLevel: 1,
+        canvasHeight: 0
     }),
     computed: {
         selectedCarImageUrl(){
@@ -64,6 +65,7 @@ export default {
                 const { width } = el.getClientRects()[0]
                 const ratio = width / 500
                 this.plateZoomLevel = ratio
+                this.canvasHeight = Math.round(375 * ratio)
                 console.log('ratio', ratio)
             })
         }
@@ -80,7 +82,7 @@ export default {
     .canvas{
         position: relative;
         width: 100%;
-        aspect-ratio: 500/375;
+        // aspect-ratio: 500/375;
         background-image: url('~@/assets/images/astonmmartin.png');
         background-size: cover;
         @include for-desktop {
