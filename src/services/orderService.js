@@ -12,8 +12,16 @@ export function orderService(rootContext){
         return data.orders.elements[0] || null
     }
 
+    const getOrderTrackingDetails = async (email, orderNo) => {
+        email = encodeURIComponent(email)
+        orderNo = encodeURIComponent(orderNo)
+        const { data } = await apiInstance.invoke.get(`/store-api/v3/order-tracking/get-tracking-details?orderNo=${orderNo}&email=${email}`)
+        return data
+    }
+
     return {
-        getOrderDetailsByDeepLinkCode
+        getOrderDetailsByDeepLinkCode,
+        getOrderTrackingDetails
     }
 
 }

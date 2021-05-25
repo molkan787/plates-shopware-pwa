@@ -264,6 +264,7 @@ export default {
   width: 60%;
   display: flex;
   flex-wrap: wrap;
+  box-sizing: border-box;
 
   @include for-mobile {
     flex-direction: column;

@@ -30,6 +30,10 @@
             <h4>Payment details</h4>
             <StripeCardForm @change="onStripeCardFormChange" />
         </div>
+        <div v-else-if="isStripePay" class="payment-details">
+            <h4 style="margin-bottom: 1rem">Payment</h4>
+            <StripePayForm @payment-submited="onStripePaySubmited" />
+        </div>
         <div class="summary__action">
             <SwButton
                 class="sf-button--full-width summary__action-button summary__action-button--secondary color-secondary sw-form__button"
@@ -39,6 +43,7 @@
                 {{ $t('Go back to Payment') }}
             </SwButton>
             <SwButton
+                v-if="!isStripePay"
                 :disabled="!cartItems.length || !canPlaceOrder"
                 :loading="placingOrder"
                 class="sf-button--full-width summary__action-button sw-form__button"
@@ -55,6 +60,7 @@ import { computed, ref } from '@vue/composition-api'
 import { useCart, useSessionContext } from '@shopware-pwa/composables'
 import SwTotals from '@/components/SwTotals.vue'
 import StripeCardForm from '../../StripeCardForm'
+import StripePayForm from '../../StripePayForm'
 
 import {
     SfProperty,
@@ -75,14 +81,15 @@ export default {
         SwButton,
         SfNotification,
         SwTotals,
-        StripeCardForm
+        StripeCardForm,
+        StripePayForm
     },
     data() {
         return {
             terms: false,
         }
     },
-    setup(props, { root }) {
+    setup(props, { root, emit }) {
         const {
             cartItems,
             subtotal,
@@ -111,6 +118,10 @@ export default {
         const isStripeCard = computed(
             () => paymentMethod.value && paymentMethod.value.shortName === 'stripe.shopware_payment.payment_handler.card'
         )
+        
+        const isStripePay = computed(
+            () => paymentMethod.value && paymentMethod.value.shortName === 'stripe.shopware_payment.payment_handler.digital_wallets'
+        )
 
         const isStripeCardFormReady = ref(false)
 
@@ -120,6 +131,10 @@ export default {
 
         const onStripeCardFormChange = (event) => {
             isStripeCardFormReady.value = event.ready && !event.error
+        }
+
+        const onStripePaySubmited = () => {
+            emit('proceed')
         }
 
         return {
@@ -133,8 +148,10 @@ export default {
             removeProduct,
             isStripeCard,
             isStripeCardFormReady,
+            isStripePay,
             canPlaceOrder,
             onStripeCardFormChange,
+            onStripePaySubmited,
             placingOrder
         }
     },
