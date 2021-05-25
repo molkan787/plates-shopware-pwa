@@ -1,5 +1,8 @@
 <template>
   <div v-if="order" class="sw-order-details">
+    <div v-if="hasPaymentError" class="hasPaymentError">
+      <SfAlert message="The payment was either canceled, declined or an error occurred" type="danger" />
+    </div>
     <SfHeading
       class="sw-order-details__header full-width"
       :level="3"
@@ -107,6 +110,7 @@ import {
   SfLoader,
   SfCharacteristic,
   SfModal,
+  SfAlert
 } from "@storefront-ui/vue"
 import { useUser, useSharedState } from "@shopware-pwa/composables"
 import { ref, onMounted, computed, watch, getCurrentInstance } from "@vue/composition-api"
@@ -135,6 +139,7 @@ export default {
     SwPluginSlot,
     SfCharacteristic,
     SfModal,
+    SfAlert
   },
   props: {
     orderId: {
@@ -214,14 +219,18 @@ export default {
 
     const isAfterPayment = root.$route.query.status == 'success'
 
+    const _hasPaymentError = typeof root.$route.query['error-code'] === 'string'
+    const hasPaymentError = ref(_hasPaymentError)
+
     onMounted(async () => {
       try {
-        if(isAfterPayment) return
         isPaymentButtonLoading.value = true
         order.value = await getOrderDetails(orderId)
         emit('order-loaded')
-        const resp = await pay(orderId)
-        paymentUrl.value = resp.paymentUrl
+        if(!isAfterPayment){
+          const resp = await pay(orderId)
+          paymentUrl.value = resp.paymentUrl
+        }
       } catch (e) { console.error(e) }
       isPaymentButtonLoading.value = false
     })
@@ -250,7 +259,8 @@ export default {
       paymentUrl,
       isPaymentButtonLoading,
       isModalOpen,
-      stripeCard
+      stripeCard,
+      hasPaymentError
     }
   },
 }
@@ -270,6 +280,14 @@ export default {
     flex-direction: column;
     width: 90%;
     padding: var(--spacer-xs);
+  }
+
+  .hasPaymentError{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 2rem;
+    zoom: 1.2;
   }
 
   &__loader {
