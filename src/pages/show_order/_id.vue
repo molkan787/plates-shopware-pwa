@@ -37,11 +37,15 @@ export default {
             () => typeof user.value.id === 'string'
         )
 
-        watch(isUserLoggedIn, isLoggedIn => {
-            if(isLoggedIn){
-                window.location.reload()
-            }
-        })
+        if(process.client){
+            watch(isUserLoggedIn, isLoggedIn => {
+                if(isLoggedIn){
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 1000)
+                }
+            })
+        }
 
         return {
             id,
@@ -51,15 +55,20 @@ export default {
             switchLoginModalState
         }
     },
-    async created(){
-        if(this.isUserLoggedIn){
-            const order = await this.getOrderDetailsByDeepLinkCode(this.deepLinkCode)
-            this.id = order.id
-        }else{
-            this.$nextTick(() => {
-                this.switchLoginModalState(true)
-            })
-        }
+    mounted(){
+        setTimeout(async () => {
+            try {
+                const order = await this.getOrderDetailsByDeepLinkCode(this.deepLinkCode)
+                this.id = order.id
+            } catch (error) {
+                console.log(error)
+                if(error.statusCode == 403){
+                    this.$nextTick(() => {
+                        this.switchLoginModalState(true)
+                    })
+                }
+            }
+        }, 500)
     }
 }
 </script>
