@@ -9,6 +9,7 @@ import { PAGE_ORDER_SUCCESS } from "@/helpers/pages"
 import { useCheckout } from '@/composables/useCheckout'
 import { useCheckoutAttachments } from '../../states/checkoutAttachments'
 import { useFileUploadService } from '../../services/fileUploadService'
+import { useOrderAttachment } from '../../composables/useOrderAttachment'
 
 const placingOrder = ref(false)
 
@@ -20,6 +21,7 @@ export const useUICheckoutPage = (rootContext) => {
   const { isGuestOrder, createOrder } = useCheckout(rootContext)
   const { upload } = useFileUploadService(rootContext)
   const { proof_of_identity, proof_of_registration_ownership } = useCheckoutAttachments()
+  const { requireDocumentsUpload } = useOrderAttachment(rootContext)
 
   
   const getCheckoutAttachments = async () => {
@@ -104,6 +106,13 @@ export const useUICheckoutPage = (rootContext) => {
       try {
         placingOrder.value = true
         const customFields = await getCheckoutAttachments()
+        if(requireDocumentsUpload.value){
+          if(typeof customFields.proof_of_identity === 'undefined' || typeof customFields.proof_of_registration_ownership === 'undefined'){
+            placingOrder.value = false
+            alert('Please upload all required documents')
+            return
+          }
+        }
         const order = await createOrder(customFields)
         placingOrder.value = false
         console.log('order created!')

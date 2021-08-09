@@ -75,9 +75,9 @@ export default {
           icon: "safety",
         },
         {
-          title: this.$t("Easy shipping"),
+          title: this.$t("DVLA approved?"),
           description: this.$t(
-            "You'll receive dispatch confirmation and an arrival date"
+            "All our number plates are DVLA approved and made to order."
           ),
           icon: "shipping",
         },

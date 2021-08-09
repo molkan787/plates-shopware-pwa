@@ -43,7 +43,8 @@ export default {
         { name: 'Home', link: '/'  },
         { name: 'Track order', link: '/track-order'  },
         { name: 'Gallery', link: '/gallery'},
-        { name: 'Returns & Exchange', link: '/returns_and_exchange'}
+        { name: 'Returns & Exchange', link: '/returns_and_exchange'},
+        { name: 'Policy', link: '/policy'}
       ],
       social: [
         { name: 'facebook', icon: 'facebook.png', link: 'http://fb.me/reg4plates', size: 31  },

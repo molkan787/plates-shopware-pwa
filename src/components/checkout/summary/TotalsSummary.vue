@@ -13,7 +13,7 @@
                 :message="$t('Your cart is empty')"
             />
         </div>
-        <div class="checkout-attachments">
+        <div v-if="requireDocumentsUpload" class="checkout-attachments">
             <div class="col">
                 <h4>PROOF OF IDENTITY</h4>
                 <input type="file" @change="fileIdentityChanged" />
@@ -23,7 +23,7 @@
                 <input type="file" @change="fileOwnershipChanged" />
             </div>
         </div>
-        <div class="accepted-files">
+        <div v-if="requireDocumentsUpload" class="accepted-files">
             Allowed file types are: 'gif', 'png', 'jpg', 'jpeg', 'pdf', 'xlsx', 'txt', 'docx'
         </div>
         <div v-if="isStripeCard" class="payment-details">
@@ -69,8 +69,9 @@ import {
     SfNotification
 } from '@storefront-ui/vue'
 import SwButton from '@/components/atoms/SwButton.vue'
-import { useCheckoutAttachments } from '../../../states/checkoutAttachments';
+import { useCheckoutAttachments } from '../../../states/checkoutAttachments'
 import { useUICheckoutPage } from '../../../logic/checkout/useUICheckoutPage'
+import { useOrderAttachment } from '../../../composables/useOrderAttachment'
 
 export default {
     name: 'TotalsSummary',
@@ -100,6 +101,7 @@ export default {
         } = useCart(root)
         const { paymentMethod } = useSessionContext(root)
         const { placingOrder } = useUICheckoutPage(root)
+        const { requireDocumentsUpload } = useOrderAttachment(root)
 
         const { proof_of_identity, proof_of_registration_ownership } = useCheckoutAttachments()
         proof_of_identity.value = null;
@@ -138,6 +140,7 @@ export default {
         }
 
         return {
+            requireDocumentsUpload,
             fileIdentityChanged,
             fileOwnershipChanged,
             cartItems,

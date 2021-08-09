@@ -15,17 +15,20 @@
                 </slot>
             </template> -->
         </div>
+        <RegLegalInfo />
     </div>
 </template>
 
 <script>
 import { SfGallery } from '@storefront-ui/vue'
+import RegLegalInfo from './RegLegalInfo.vue'
 import { getProductMediaGallery } from '@shopware-pwa/helpers'
 
 export default {
     name: 'SwProductGallery',
     components: {
         SfGallery,
+        RegLegalInfo,
         Lingallery: () => import('lingallery')
     },
     props: {
@@ -55,6 +58,12 @@ export default {
 @include for-desktop {
     .gallery__mobile {
         margin: var(--spacer-lg) 0 0 0;
+    }
+}
+
+@include for-mobile {
+    .legal-info {
+        display: none;
     }
 }
 
