@@ -74,12 +74,10 @@
       :reviews="reviews"
       :manufacturer="manufacturer"
     />
-    <RegLegalInfo />
   </div>
 </template>
 <script>
 import { SfAlert, SfAddToCart, SfLoader, SfInput } from "@storefront-ui/vue"
-import RegLegalInfo from './RegLegalInfo.vue'
 import {
   getProductNumber,
   getProductOptions,
@@ -113,7 +111,6 @@ export default {
     SwProductColors: () => import("@/components/SwProductColors.vue"),
     SwPluginSlot: () => import("sw-plugins/SwPluginSlot.vue"),
     SwButton,
-    RegLegalInfo,
   },
   props: {
     product: {
